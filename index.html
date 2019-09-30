@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Interpolacion de Lagrange</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha256-2YQRJMXD7pIAPHiXr0s+vlRWA7GYJEK0ARns7k2sbHY=" crossorigin="anonymous" />
+</head>
+<body>
+    <div id="contenedor-app">
+            <header>
+                    <h1>Analisis Numerico Proyecto 3</h1>
+                    <h4>Alberto Baltazar Gutiérrez Ortega - 1887970</h4>
+                    <h2>Interpolacion de Lagrange</h2>
+            </header>
+            
+        
+            <div>
+                <label for="nParejas">Numero de parejas de puntos</label>
+                <input type="number" id="nParejas">
+                <button class="btnEnviar">Enviar</button>
+            </div>
+            <table id="tabla">
+                <thead>
+                        <tr class="tr-heading">
+                            <th>X</th>
+                            <th>Y</th>
+                        </tr>
+                </thead>
+                
+            </table>
+            <div id="contenedor-calcular">
+        
+            </div>
+            <div id="contenedor-resultado">
+                <h2 id="resultado-final">Resultado: </h2>
+            </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
