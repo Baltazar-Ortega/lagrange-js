@@ -20,6 +20,15 @@ header h2 {
     margin-top: 30px;
 }
 
+th {
+    text-align: start;
+}
+
+#nParejas {
+    width: 125px;
+    font-size: 25px;
+}
+
 #contenedor-app {
     background-color: white;
     width: 90%;
@@ -35,6 +44,10 @@ header h2 {
     display: none;
 }
 
+#formula {
+    display: none;
+}
+
 .btnEnviar {
     margin-left: 10px;
 }
@@ -46,4 +59,5 @@ header h2 {
 #contenedor-resultado {
     display: none;
 }
+
 
