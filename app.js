@@ -1,10 +1,10 @@
 class App {
     constructor(){
-        this.loadUIelements()
-        this.loadEventListeners()
+        this.cargarUIelements()
+        this.cargarEventListeners()
     }
 
-    loadUIelements() {
+    cargarUIelements() {
         this.tabla = document.getElementById('tabla')
         this.btnEnviar = document.querySelector(".btnEnviar")
         this.nParejasInput = document.getElementById('nParejas')
@@ -18,7 +18,7 @@ class App {
         this.nParejas = ''
     }
 
-    loadEventListeners(){
+    cargarEventListeners(){
         this.nParejasInput.addEventListener('change', cambiarValorNParejas.bind(this))
         this.btnEnviar.addEventListener('click', onCrearTabla.bind(this))
 
@@ -43,8 +43,8 @@ class App {
     }
 
     crearTabla(){
-        let puntosX = []
-        let puntosY = []
+        let valoresX = []
+        let valoresY = []
         let tbody = document.createElement('tbody')
         
         for(let i = 0; i < this.nParejas; i++){
@@ -57,9 +57,9 @@ class App {
             inputX.style.width = "120px"
             inputX.style.fontSize = "25px"
             inputX.className = `x${i+1}`
-            puntosX.push({"id": `x${i+1}`, value: undefined})
+            valoresX.push({"id": `x${i+1}`, value: undefined})
             inputX.onchange = (e) => {
-                puntosX[i].value = e.target.value
+                valoresX[i].value = e.target.value
             }
             let inputY = document.createElement("input");
             inputY.type = "number";
@@ -67,9 +67,9 @@ class App {
             inputY.style.width = "120px"
             inputY.style.fontSize = "25px"
             inputY.className = `y${i+1}`
-            puntosY.push({"id": `y${i+1}`, value: undefined})
+            valoresY.push({"id": `y${i+1}`, value: undefined})
             inputY.onchange = (e) => {
-                puntosY[i].value = e.target.value
+                valoresY[i].value = e.target.value
             }
             newTdX.appendChild(inputX)
             newTdY.appendChild(inputY)
@@ -80,7 +80,7 @@ class App {
         this.tabla.appendChild(tbody)
         this.tabla.style.display = 'block'
         this.crearValorBuscar()
-        this.crearBotonCalcular(puntosX, puntosY)
+        this.crearBotonCalcular(valoresX, valoresY)
     }
 
     crearValorBuscar(){
@@ -100,7 +100,7 @@ class App {
         this.contenedorCalcular.appendChild(inputValorABuscar)
     }
 
-    crearBotonCalcular(puntosX, puntosY) {
+    crearBotonCalcular(valoresX, valoresY) {
         let botonCalcular = document.createElement('button')
         botonCalcular.innerHTML = "Calcular"
         botonCalcular.style.marginTop = "20px"
@@ -108,14 +108,20 @@ class App {
         botonCalcular.style.marginLeft = "10px"
         botonCalcular.style.className = "button-primary"
         botonCalcular.onclick = () => {
-            let existeUndefined = 0
-            puntosX.forEach((item) => {
+            this.validarBotonCalcular(valoresX, valoresY)
+        }
+        this.contenedorCalcular.appendChild(botonCalcular)
+    }
+
+    validarBotonCalcular(valoresX, valoresY) {
+        let existeUndefined = 0
+            valoresX.forEach((item) => {
                 if (item.value === undefined){
                     existeUndefined++;
                     return
                 }
             })
-            puntosY.forEach((item) => {
+            valoresY.forEach((item) => {
                 if (item.value === undefined){
                     existeUndefined++;
                     return
@@ -129,7 +135,7 @@ class App {
                     confirmButtonText: 'Ok',
                     confirmButtonColor: 'green'
                 })
-            } else if (!this.validarPuntosX(puntosX)){
+            } else if (!this.validarValoresX(valoresX)){
                 Swal.fire({
                     title: 'Error',
                     text: "No debe haber valores de x repetidos",
@@ -138,15 +144,13 @@ class App {
                     confirmButtonColor: 'green'
                 })
             } else {
-                this.lagrange(puntosX, puntosY, this.valor)
+                this.lagrange(valoresX, valoresY, this.valor)
             }
-        }
-        this.contenedorCalcular.appendChild(botonCalcular)
     }
 
-    validarPuntosX(puntosX) {
-        let puntosXValues = puntosX.map((el) => parseFloat(el.value));
-        let noRepetidos = puntosXValues.every((el, i, array) => {
+    validarValoresX(valoresX) {
+        let valoresXValues = valoresX.map((el) => parseFloat(el.value));
+        let noRepetidos = valoresXValues.every((el, i, array) => {
             return array.indexOf(el) === i
         })
         return noRepetidos ? true : false
@@ -171,9 +175,9 @@ class App {
         script2.parentNode.removeChild(script2)
     }
 
-    lagrange(puntosX, puntosY, valor){
+    lagrange(valoresX, valoresY, valor){
         let resultado = 0
-        let latex = "P(x) = "
+        let latex = `P(${valor}) = `
         for (let i=0; i < this.nParejas; i++){
             let numerador = 1
             let denominador = 1
@@ -182,14 +186,14 @@ class App {
             for (let j = 0; j < this.nParejas; j++) {
                 
                 if (j != i) {
-                    numerador = numerador * (valor - puntosX[j].value)
-                    elementosNumerador += `(${valor}-${puntosX[j].value})`
-                    denominador = denominador * (puntosX[i].value - puntosX[j].value)
-                    elementosDenominador += `(${puntosX[i].value}-${puntosX[j].value})`
+                    numerador = numerador * (valor - valoresX[j].value)
+                    elementosNumerador += `(${valor}-${valoresX[j].value})`
+                    denominador = denominador * (valoresX[i].value - valoresX[j].value)
+                    elementosDenominador += `(${valoresX[i].value}-${valoresX[j].value})`
                 }
             }
-            resultado = resultado + ((numerador/denominador) * puntosY[i].value)
-            latex += `\\frac{${elementosNumerador}}{${elementosDenominador}}\\times${puntosY[i].value}`
+            resultado = resultado + ((numerador/denominador) * valoresY[i].value)
+            latex += `\\frac{${elementosNumerador}}{${elementosDenominador}}\\times${valoresY[i].value}`
             if (i != this.nParejas - 1){
                 latex += "+"
             }
