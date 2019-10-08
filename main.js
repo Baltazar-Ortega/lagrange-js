@@ -129,11 +129,27 @@ class App {
                     confirmButtonText: 'Ok',
                     confirmButtonColor: 'green'
                 })
+            } else if (!this.validarPuntosX(puntosX)){
+                Swal.fire({
+                    title: 'Error',
+                    text: "No debe haber valores de x repetidos",
+                    type: "error",
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: 'green'
+                })
             } else {
                 this.lagrange(puntosX, puntosY, this.valor)
             }
         }
         this.contenedorCalcular.appendChild(botonCalcular)
+    }
+
+    validarPuntosX(puntosX) {
+        let puntosXValues = puntosX.map((el) => parseFloat(el.value));
+        let noRepetidos = puntosXValues.every((el, i, array) => {
+            return array.indexOf(el) === i
+        })
+        return noRepetidos ? true : false
     }
 
     scriptsMathJax(latexString) {
@@ -167,29 +183,17 @@ class App {
                 
                 if (j != i) {
                     numerador = numerador * (valor - puntosX[j].value)
-                    console.log("numerador")
-                    console.log("valor", valor)
-                    console.log("puntosX[j].value", puntosX[j].value)
                     elementosNumerador += `(${valor}-${puntosX[j].value})`
                     denominador = denominador * (puntosX[i].value - puntosX[j].value)
-                    console.log("denominador")
-                    console.log("puntosX[i].value", puntosX[i].value)
-                    console.log("puntosX[j].value", puntosX[j].value)
                     elementosDenominador += `(${puntosX[i].value}-${puntosX[j].value})`
                 }
             }
-            console.log(elementosNumerador)
-            console.log(elementosDenominador)
             resultado = resultado + ((numerador/denominador) * puntosY[i].value)
-            console.log("Multiplicar por ", puntosY[i].value)
-            console.log("resultado", resultado)
             latex += `\\frac{${elementosNumerador}}{${elementosDenominador}}\\times${puntosY[i].value}`
             if (i != this.nParejas - 1){
                 latex += "+"
             }
-            console.log("latex", latex)
         }
-        console.log("Final latex", latex)
         this.scriptsMathJax(latex)
         this.contenedorResultado.style.display = 'block'
         this.contenedorResultado.style.marginTop = '35px'
